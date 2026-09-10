@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>🧠 RIXZ QUIZ - Latihan Soal SMP</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter','Segoe UI','Poppins',sans-serif}
+:root{--bg:#0a0a15;--card:rgba(18,18,35,.95);--text:#f0f0f0;--text-dim:rgba(240,240,240,.5);--text-muted:rgba(240,240,240,.3);--gold:#f1c40f;--purple:#6c5ce7;--purple-light:#a29bfe;--green:#2ecc71;--red:#ff6b6b;--blue:#3498db;--gray:#95a5a6;--border:rgba(255,255,255,.07);--radius:18px;--shadow:0 25px 60px rgba(0,0,0,.7);--transition:.3s cubic-bezier(.4,0,.2,1)}
+body{background:radial-gradient(ellipse at top,#14142a 0%,#0a0a15 65%);min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start;color:var(--text);-webkit-font-smoothing:antialiased}
+.container{max-width:700px;width:100%;margin:0 auto}
+.page{display:none}.page.active{display:block;animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border-radius:var(--radius);padding:32px 26px 34px;border:1px solid var(--border);box-shadow:var(--shadow);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(108,92,231,.08),transparent 70%);pointer-events:none}
+.header{text-align:center;margin-bottom:26px;position:relative;z-index:2}
+.header .logo{font-size:52px;filter:drop-shadow(0 0 25px rgba(108,92,231,.35));display:block;margin-bottom:6px}
+.header h1{font-size:28px;font-weight:800;letter-spacing:1.5px;background:linear-gradient(135deg,var(--purple),var(--purple-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header .sub{color:var(--text-dim);font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-top:6px}
+.divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),transparent);margin:14px auto 0;border-radius:10px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;position:relative;z-index:2}
+.auth-tab{padding:12px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);color:var(--text-dim);font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);text-align:center}
+.auth-tab:hover{border-color:rgba(108,92,231,.4);color:var(--text)}
+.auth-tab.active{border-color:var(--purple);background:rgba(108,92,231,.1);color:var(--purple-light)}
+.form-group{margin-bottom:15px;position:relative;z-index:2}
+.form-group label{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;display:block;margin-bottom:6px}
+.form-group input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-size:14px;outline:none;transition:var(--transition)}
+.form-group input:focus{border-color:var(--purple);box-shadow:0 0 25px rgba(108,92,231,.2);background:rgba(255,255,255,.05)}
+.form-group input::placeholder{color:var(--text-muted)}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;transition:var(--transition);letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:2}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;box-shadow:0 8px 30px rgba(108,92,231,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(108,92,231,.5)}
+.btn-secondary{background:rgba(255,255,255,.05);color:var(--text);border:1.5px solid var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,.08);border-color:var(--purple)}
+.btn-pass{background:linear-gradient(135deg,#7f8c8d,#95a5a6);color:#fff;box-shadow:0 8px 30px rgba(149,165,166,.2)}
+.btn-pass:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(149,165,166,.4)}
+.btn-answer{background:linear-gradient(135deg,var(--green),#27ae60);color:#fff;box-shadow:0 8px 30px rgba(46,204,113,.3)}
+.btn-answer:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(46,204,113,.5)}
+.auth-footer{text-align:center;margin-top:20px;color:var(--text-dim);font-size:12px;position:relative;z-index:2}
+.auth-footer a{color:var(--purple-light);text-decoration:none;font-weight:700;cursor:pointer}
+.auth-footer a:hover{text-decoration:underline}
+.user-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:12px;background:rgba(108,92,231,.06);border:1px solid rgba(108,92,231,.15);margin-bottom:20px;position:relative;z-index:2;flex-wrap:wrap;gap:8px}
+.user-bar .user-info{display:flex;align-items:center;gap:10px;font-size:13px}
+.user-bar .user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple-light));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
+.user-bar .user-name{color:var(--text);font-weight:700}
+.user-bar .user-name small{display:block;color:var(--text-dim);font-weight:400;font-size:10px;letter-spacing:.5px}
+.user-bar .user-actions{display:flex;gap:6px;flex-wrap:wrap}
+.user-bar .logout-btn{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2);color:var(--red);padding:7px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:var(--transition)}
+.user-bar .logout-btn:hover{background:rgba(255,107,107,.2);border-color:var(--red)}
+.points-badge{background:linear-gradient(135deg,var(--gold),#f39c12);color:#0a0a15;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px}
+.menu-grid{display:grid;gap:10px;position:relative;z-index:2}
+.menu-item{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:var(--transition)}
+.menu-item:hover{border-color:rgba(108,92,231,.4);background:rgba(108,92,231,.04);transform:translateX(4px)}
+.menu-item .icon{font-size:26px}
+.menu-item .info{flex:1}
+.menu-item .info .title{color:var(--text);font-weight:700;font-size:15px}
+.menu-item .info .desc{color:var(--text-dim);font-size:11px;margin-top:2px}
+.menu-item .arrow{color:var(--text-dim);font-size:18px}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:12px;flex-wrap:wrap;position:relative;z-index:2}
+.quiz-progress{flex:1;min-width:200px}
+.quiz-progress .info{display:flex;justify-content:space-between;color:var(--text-dim);font-size:12px;margin-bottom:6px}
+.quiz-progress .info strong{color:var(--purple-light)}
+.progress-bar{height:8px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--purple-light));border-radius:10px;transition:width .4s ease;width:0%}
+.timer-badge{background:rgba(241,196,15,.1);border:1px solid rgba(241,196,15,.2);color:var(--gold);padding:8px 16px;border-radius:30px;font-weight:800;font-size:15px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.timer-badge.danger{background:rgba(255,107,107,.15);border-color:rgba(255,107,107,.4);color:var(--red);animation:pulse .6s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.question-box{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;padding:24px 22px;margin-bottom:18px;position:relative;z-index:2}
+.question-box .q-meta{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.q-meta .tag{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.tag.pg{background:rgba(52,152,219,.15);color:var(--blue)}
+.tag.isian{background:rgba(46,204,113,.15);color:var(--green)}
+.tag.kompleks{background:rgba(241,196,15,.15);color:var(--gold)}
+.tag.mapel{background:rgba(108,92,231,.15);color:var(--purple-light)}
+.tag.kelas{background:rgba(255,107,107,.15);color:var(--red)}
+.question-text{color:var(--text);font-size:17px;line-height:1.6;font-weight:600;margin-bottom:20px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:var(--transition);color:var(--text);font-size:14px;line-height:1.5}
+.option:hover{border-color:rgba(108,92,231,.4);background:rgba(108,92,231,.05)}
+.option.selected{border-color:var(--purple);background:rgba(108,92,231,.12)}
+.option .key{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:rgba(108,92,231,.15);color:var(--purple-light);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.option.selected .key{background:var(--purple);color:#fff}
+.isian-input{width:100%;padding:16px 18px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-size:15px;outline:none;transition:var(--transition)}
+.isian-input:focus{border-color:var(--purple);box-shadow:0 0 25px rgba(108,92,231,.2)}
+.hint-kompleks{color:var(--gold);font-size:12px;margin-bottom:12px;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;background:rgba(241,196,15,.06);border:1px solid rgba(241,196,15,.15)}
+.quiz-nav{display:flex;gap:10px;position:relative;z-index:2}
+.quiz-nav .btn{flex:1}
+.result-hero{text-align:center;padding:20px 0 24px;position:relative;z-index:2}
+.result-hero .emoji{font-size:72px;display:block;margin-bottom:8px}
+.result-hero .title{color:var(--text);font-size:26px;font-weight:800;margin-bottom:6px}
+.result-hero .subtitle{color:var(--text-dim);font-size:13px}
+.score-circle{width:160px;height:160px;border-radius:50%;margin:20px auto;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--purple) var(--progress,0%),rgba(255,255,255,.05) 0%)}
+.score-circle::before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;background:var(--card)}
+.score-circle .score-text{position:relative;z-index:2;text-align:center}
+.score-circle .score-text .num{color:var(--purple-light);font-size:42px;font-weight:800;line-height:1}
+.score-circle .score-text .lbl{color:var(--text-dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.chart-container{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:16px;padding:20px;margin-top:20px;position:relative;z-index:2;height:300px}
+.chart-title{text-align:center;color:var(--text-dim);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-weight:700}
+.review-list{display:flex;flex-direction:column;gap:10px;max-height:500px;overflow-y:auto;margin-top:20px;padding-right:4px;position:relative;z-index:2}
+.review-item{padding:14px 16px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--border)}
+.review-item.correct{border-left:3px solid var(--green)}
+.review-item.wrong{border-left:3px solid var(--red)}
+.review-item.close{border-left:3px solid var(--gold)}
+.review-item.pass{border-left:3px solid var(--gray);opacity:.7}
+.review-item .r-q{color:var(--text);font-size:13px;font-weight:600;margin-bottom:6px}
+.review-item .r-a{font-size:12px;margin-top:4px}
+.review-item .r-a.correct{color:var(--green)}
+.review-item .r-a.wrong{color:var(--red)}
+.review-item .r-a.close{color:var(--gold)}
+.review-item .r-a.pass{color:var(--gray)}
+.review-item .r-a .label{color:var(--text-dim);font-weight:600}
+.review-item .r-explanation{margin-top:8px;padding:8px 12px;border-radius:8px;background:rgba(108,92,231,.05);border-left:2px solid var(--purple);color:var(--text-dim);font-size:12px;line-height:1.5}
+.lb-item{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid var(--border);margin-bottom:10px;position:relative;z-index:2}
+.lb-item.top1{border-color:rgba(241,196,15,.5);background:rgba(241,196,15,.08)}
+.lb-item.top2{border-color:rgba(192,192,192,.4);background:rgba(192,192,192,.04)}
+.lb-item.top3{border-color:rgba(205,127,50,.4);background:rgba(205,127,50,.04)}
+.lb-medal{font-size:36px;flex-shrink:0;line-height:1}
+.lb-username{flex:1;color:var(--text);font-weight:800;font-size:17px;letter-spacing:.5px}
+.lb-username .me{color:var(--purple-light);font-size:11px;margin-left:6px;font-weight:700}
+.lb-medal-name{color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-top:2px}
+.lb-medal-name.gold{color:#f1c40f}.lb-medal-name.silver{color:#c0c0c0}.lb-medal-name.bronze{color:#cd7f32}
+.lb-points{color:var(--purple-light);font-weight:800;font-size:20px;letter-spacing:.5px;flex-shrink:0}
+.lb-points small{color:var(--text-dim);font-size:11px;font-weight:600;margin-left:3px}
+.empty{text-align:center;padding:40px 20px;color:var(--text-dim);position:relative;z-index:2}
+.empty .icon{font-size:48px;display:block;margin-bottom:12px;opacity:.5}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(20,20,40,.97);color:var(--text);padding:13px 24px;border-radius:12px;border:1px solid var(--border);backdrop-filter:blur(10px);font-size:13px;font-weight:600;z-index:3000;display:none;max-width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.toast.show{display:block;animation:fadeUp .4s ease}
+.toast.success{border-color:var(--green)}.toast.error{border-color:var(--red)}.toast.gold{border-color:var(--gold)}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.footer{text-align:center;margin-top:20px;color:var(--text-dim);font-size:10px;letter-spacing:2px;opacity:.3;position:relative;z-index:2}
+.mapel-stats{display:flex;flex-direction:column;gap:10px;position:relative;z-index:2}
+.mapel-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid var(--border)}
+.mapel-row .mapel-name{color:var(--text);font-weight:700;font-size:13px;min-width:120px}
+.mapel-row .mapel-bar{flex:1;height:8px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden}
+.mapel-row .mapel-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--purple-light));border-radius:10px;transition:width .5s}
+.mapel-row .mapel-pct{color:var(--purple-light);font-weight:800;font-size:14px;min-width:45px;text-align:right}
+.achievement-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;z-index:2}
+.achievement-card{text-align:center;padding:14px 8px;border-radius:14px;background:rgba(255,255,255,.02);border:1.5px solid var(--border);transition:var(--transition);position:relative}
+.achievement-card.unlocked{border-color:var(--gold);background:rgba(241,196,15,.08)}
+.achievement-card.locked{opacity:.4;filter:grayscale(1)}
+.achievement-card .ach-icon{font-size:32px;display:block;margin-bottom:6px}
+.achievement-card .ach-title{color:var(--text);font-size:11px;font-weight:700;margin-bottom:2px}
+.achievement-card .ach-desc{color:var(--text-dim);font-size:9px;line-height:1.3}
+.reward-grid{display:grid;grid-template-columns:1fr;gap:10px;position:relative;z-index:2}
+.reward-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:12px;background:rgba(255,255,255,.02);border:1.5px solid var(--border);transition:var(--transition)}
+.reward-item.owned{border-color:var(--green)}
+.reward-item.active{border-color:var(--purple);background:rgba(108,92,231,.1)}
+.reward-preview{width:44px;height:44px;border-radius:10px;flex-shrink:0;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px}
+.reward-info{flex:1}
+.reward-info .name{color:var(--text);font-weight:700;font-size:14px}
+.reward-info .cost{color:var(--gold);font-size:11px;margin-top:2px;font-weight:700}
+.reward-btn{padding:8px 16px;border-radius:8px;border:none;font-size:11px;font-weight:800;cursor:pointer;letter-spacing:1px;text-transform:uppercase;background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;transition:var(--transition)}
+.reward-btn:hover{transform:scale(1.05)}
+.reward-btn.owned{background:rgba(46,204,113,.2);color:var(--green)}
+.reward-btn.active{background:var(--green);color:#fff}
+.share-preview{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.share-preview.show{display:flex}
+.share-card{background:linear-gradient(135deg,#1a1a2e,#0a0a15);border-radius:20px;padding:30px 24px;max-width:400px;width:100%;border:2px solid var(--purple);text-align:center;position:relative}
+.share-card .share-logo{font-size:52px;margin-bottom:6px}
+.share-card .share-title{font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--purple-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.share-card .share-sub{color:var(--text-dim);font-size:11px;letter-spacing:3px;margin-bottom:20px}
+.share-card .share-score-box{background:rgba(108,92,231,.1);border:2px solid var(--purple);border-radius:16px;padding:20px;margin-bottom:16px}
+.share-card .share-score-num{font-size:48px;font-weight:800;color:var(--purple-light);line-height:1}
+.share-card .share-score-lbl{color:var(--text-dim);font-size:12px;letter-spacing:2px;margin-top:6px}
+.share-card .share-detail{color:var(--text);font-size:14px;margin-bottom:6px}
+.share-card .share-detail strong{color:var(--purple-light)}
+.share-card .share-footer{color:var(--text-dim);font-size:11px;margin-top:16px;opacity:.6}
+.share-actions{display:flex;gap:10px;margin-top:20px}
+.share-actions button{flex:1}
+.cheat-warning{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,0,0,.9);z-index:9999;display:none;align-items:center;justify-content:center;text-align:center;padding:20px;flex-direction:column}
+.cheat-warning.show{display:flex}
+.cheat-warning .icon{font-size:80px;margin-bottom:16px}
+.cheat-warning .title{color:#fff;font-size:24px;font-weight:800;margin-bottom:10px}
+.cheat-warning .desc{color:rgba(255,255,255,.8);font-size:14px;max-width:400px}
+@media(max-width:480px){.card{padding:22px 16px 26px}.header h1{font-size:22px}.header .logo{font-size:42px}.question-text{font-size:15px}.quiz-header{flex-direction:column;align-items:stretch}.quiz-nav{flex-direction:column}.achievement-grid{grid-template-columns:repeat(2,1fr)}.lb-medal{font-size:28px}.lb-username{font-size:15px}.lb-points{font-size:17px}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:rgba(10,10,30,.6)}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--purple),var(--purple-light));border-radius:10px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- PAGE: AUTH -->
+<div class="page active" id="pageAuth">
+<div class="card">
+<div class="header"><div class="logo">🧠</div><h1>RIXZ QUIZ</h1><div class="sub">Latihan Soal SMP</div><div class="divider"></div></div>
+<div class="auth-tabs"><div class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">🔑 Login</div><div class="auth-tab" id="tabRegister" onclick="switchAuth('register')">📝 Daftar</div></div>
+<form id="loginForm" onsubmit="handleLogin(event)">
+<div class="form-group"><label>👤 Username</label><input type="text" id="loginUsername" placeholder="Username" required/></div>
+<div class="form-group"><label>🔒 Password</label><input type="password" id="loginPassword" placeholder="Password" required/></div>
+<button type="submit" class="btn btn-primary">🔑 Login</button>
+<div class="auth-footer">Belum punya akun? <a onclick="switchAuth('register')">Daftar di sini</a></div>
+</form>
+<form id="registerForm" style="display:none" onsubmit="handleRegister(event)">
+<div class="form-group"><label>👤 Username</label><input type="text" id="regUsername" placeholder="Min. 3 karakter" required/></div>
+<div class="form-group"><label>🔒 Password</label><input type="password" id="regPassword" placeholder="Min. 4 karakter" required/></div>
+<div class="form-group"><label>🔒 Konfirmasi</label><input type="password" id="regPassword2" placeholder="Ulangi password" required/></div>
+<button type="submit" class="btn btn-primary">📝 Daftar</button>
+<div class="auth-footer">Sudah punya akun? <a onclick="switchAuth('login')">Login di sini</a></div>
+</form>
+</div>
+</div>
+
+<!-- PAGE: DASHBOARD -->
+<div class="page" id="pageDash">
+<div class="card">
+<div class="user-bar">
+<div class="user-info"><div class="user-avatar" id="userAvatar">R</div><div class="user-name"><span id="userNameDisplay">-</span><small id="userLevelDisplay">Pemula</small></div></div>
+<div class="user-actions"><div class="points-badge" id="pointsBadge">💰 0</div><button class="logout-btn" onclick="handleLogout()">🚪</button></div>
+</div>
+<div class="header" style="margin-bottom:18px"><div class="logo">🧠</div><h1>RIXZ QUIZ</h1><div class="sub">Latihan Soal SMP</div><div class="divider"></div></div>
+<div class="menu-grid">
+<div class="menu-item" onclick="startQuiz()"><span class="icon">🚀</span><div class="info"><div class="title">Mulai Kuis</div><div class="desc" id="quizCountDesc">60 soal · Campur semua mapel</div></div><span class="arrow">→</span></div>
+<div class="menu-item" onclick="showLeaderboard()"><span class="icon">🏆</span><div class="info"><div class="title">Papan Peringkat</div><div class="desc">Top 10 · Medali emas, perak, perunggu</div></div><span class="arrow">→</span></div>
+<div class="menu-item" onclick="showStatsPerMapel()"><span class="icon">📊</span><div class="info"><div class="title">Statistik Per Mapel</div><div class="desc">Lihat kekuatan & kelemahan</div></div><span class="arrow">→</span></div>
+<div class="menu-item" onclick="showAchievements()"><span class="icon">🏅</span><div class="info"><div class="title">Achievement</div><div class="desc">Badge yang kamu dapat</div></div><span class="arrow">→</span></div>
+<div class="menu-item" onclick="showRewards()"><span class="icon">🎁</span><div class="info"><div class="title">Tukar Poin</div><div class="desc" id="themeCountDesc">Beli tema warna</div></div><span class="arrow">→</span></div>
+<div class="menu-item" onclick="showHistory()"><span class="icon">📜</span><div class="info"><div class="title">Riwayat Kuis</div><div class="desc">Lihat hasil sebelumnya</div></div><span class="arrow">→</span></div>
+</div>
+<div class="footer">✦ RIXZ QUIZ · Latihan Soal SMP ✦</div>
+</div>
+</div>
+
+<!-- PAGE: QUIZ -->
+<div class="page" id="pageQuiz">
+<div class="card">
+<div class="quiz-header">
+<div class="quiz-progress"><div class="info"><span>Soal <strong id="qNum">1</strong> / <strong id="qTotal">60</strong></span><span>Skor: <strong id="qScore">0</strong></span></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
+<div class="timer-badge" id="timerBadge">⏱️ <span id="timerText">60</span>s</div>
+</div>
+<div class="question-box"><div class="q-meta" id="qMeta"></div><div class="question-text" id="qText">-</div><div class="options" id="qOptions"></div></div>
+<div class="quiz-nav">
+<button class="btn btn-pass" onclick="passQuestion()">⏭️ Pass</button>
+<button class="btn btn-answer" onclick="answerQuestion()">✅ Jawab</button>
+</div>
+</div>
+</div>
+
+<!-- PAGE: RESULT -->
+<div class="page" id="pageResult">
+<div class="card">
+<div class="result-hero"><span class="emoji" id="resultEmoji">🎉</span><div class="title" id="resultTitle">Selesai!</div><div class="subtitle" id="resultSub">Kamu telah menyelesaikan kuis</div></div>
+<div class="score-circle" id="scoreCircle"><div class="score-text"><div class="num" id="resultScore">0</div><div class="lbl">Skor</div></div></div>
+<div class="chart-container"><div class="chart-title">📊 Grafik Jawaban</div><canvas id="resultChart"></canvas></div>
+<div style="margin-top:20px"><div style="color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:2px;text-align:center;margin-bottom:12px;position:relative;z-index:2">📋 Review Jawaban</div><div class="review-list" id="reviewList"></div></div>
+<div style="display:flex;gap:10px;margin-top:20px;position:relative;z-index:2;flex-wrap:wrap"><button class="btn btn-secondary" onclick="goTo('pageDash')" style="flex:1;min-width:120px">🏠 Home</button><button class="btn btn-primary" onclick="shareResult()" style="flex:1;min-width:120px">📤 Share</button><button class="btn btn-primary" onclick="startQuiz()" style="flex:1;min-width:120px">🔄 Ulang</button></div>
+</div>
+</div>
+
+<!-- PAGE: LEADERBOARD -->
+<div class="page" id="pageLeaderboard">
+<div class="card">
+<div class="header"><div class="logo">🏆</div><h1>PAPAN PERINGKAT</h1><div class="sub">Top 10 · Medali</div><div class="divider"></div></div>
+<div id="lbList"></div>
+<div style="margin-top:20px;position:relative;z-index:2"><button class="btn btn-secondary" onclick="goTo('pageDash')">🏠 Kembali</button></div>
+</div>
+</div>
+
+<!-- PAGE: HISTORY -->
+<div class="page" id="pageHistory">
+<div class="card">
+<div class="header"><div class="logo">📜</div><h1>RIWAYAT</h1><div class="sub">Kuis Sebelumnya</div><div class="divider"></div></div>
+<div id="historyList"></div>
+<div style="margin-top:20px;position:relative;z-index:2"><button class="btn btn-secondary" onclick="goTo('pageDash')">🏠 Kembali</button></div>
+</div>
+</div>
+
+<!-- PAGE: STATS -->
+<div class="page" id="pageStats">
+<div class="card">
+<div class="header"><div class="logo">📊</div><h1>STATISTIK MAPEL</h1><div class="sub">Kekuatan & Kelemahan</div><div class="divider"></div></div>
+<div class="mapel-stats" id="mapelStats"></div>
+<div style="margin-top:20px;position:relative;z-index:2"><button class="btn btn-secondary" onclick="goTo('pageDash')">🏠 Kembali</button></div>
+</div>
+</div>
+
+<!-- PAGE: ACHIEVEMENTS -->
+<div class="page" id="pageAchievements">
+<div class="card">
+<div class="header"><div class="logo">🏅</div><h1>ACHIEVEMENT</h1><div class="sub">Badge Kamu</div><div class="divider"></div></div>
+<div class="achievement-grid" id="achGrid"></div>
+<div style="margin-top:20px;position:relative;z-index:2"><button class="btn btn-secondary" onclick="goTo('pageDash')">🏠 Kembali</button></div>
+</div>
+</div>
+
+<!-- PAGE: REWARDS -->
+<div class="page" id="pageRewards">
+<div class="card">
+<div class="header"><div class="logo">🎁</div><h1>TUKAR POIN</h1><div class="sub">Poin: <span id="rewardPoints">0</span></div><div class="divider"></div></div>
+<div class="reward-grid" id="themeGrid"></div>
+<div style="margin-top:20px;position:relative;z-index:2"><button class="btn btn-secondary" onclick="goTo('pageDash')">🏠 Kembali</button></div>
+</div>
+</div>
+
+</div>
+
+<div class="share-preview" id="sharePreview">
+<div>
+<div class="share-card" id="shareCard">
+<div class="share-logo">🧠</div>
+<div class="share-title">RIXZ QUIZ</div>
+<div class="share-sub">HASIL KUIS</div>
+<div class="share-score-box"><div class="share-score-num" id="shareScoreNum">0</div><div class="share-score-lbl">SKOR</div></div>
+<div class="share-detail">👤 <strong id="shareUser">-</strong></div>
+<div class="share-detail">✅ Benar: <strong id="shareCorrect">0</strong></div>
+<div class="share-detail">📊 Akurasi: <strong id="sharePercent">0%</strong></div>
+<div class="share-footer">🎯 Ayo coba RIXZ QUIZ!</div>
+</div>
+<div class="share-actions"><button class="btn btn-secondary" onclick="closeShare()">✖️ Tutup</button><button class="btn btn-primary" onclick="downloadShare()">💾 Download</button></div>
+</div>
+</div>
+
+<div class="cheat-warning" id="cheatWarning">
+<div class="icon">🚨</div>
+<div class="title">KUIS DIDISKUALIFIKASI</div>
+<div class="desc">Kamu terdeteksi pindah tab / minimize browser. Kuis dihentikan.</div>
+<div style="margin-top:20px"><button class="btn btn-primary" onclick="closeCheatAndReturn()" style="padding:14px 30px">🏠 Kembali ke Dashboard</button></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SOAL_BANK=[
+{mapel:"Matematika",kelas:7,tipe:"pg",soal:"Hasil dari 15 × 8 - 40 : 4 adalah...",opsi:["100","110","120","130"],jawaban:"110",penjelasan:"15 × 8 = 120, lalu 40 : 4 = 10. Jadi 120 - 10 = 110."},
+{mapel:"Matematika",kelas:7,tipe:"isian",soal:"KPK dari 12 dan 18 adalah...",jawaban:"36",penjelasan:"12 = 2² × 3, 18 = 2 × 3². KPK = 2² × 3² = 36."},
+{mapel:"Matematika",kelas:7,tipe:"pg",soal:"Bentuk pecahan desimal dari 3/4 adalah...",opsi:["0,25","0,50","0,75","1,25"],jawaban:"0,75",penjelasan:"3/4 = 3 ÷ 4 = 0,75."},
+{mapel:"Matematika",kelas:8,tipe:"pg",soal:"Jika x + 5 = 12, maka nilai x adalah...",opsi:["5","6","7","8"],jawaban:"7",penjelasan:"x = 12 - 5 = 7."},
+{mapel:"Matematika",kelas:8,tipe:"kompleks",soal:"Manakah yang termasuk bilangan prima? (pilih semua)",opsi:["2","4","7","9","11","15"],jawaban:["2","7","11"],penjelasan:"Bilangan prima hanya habis dibagi 1 dan dirinya sendiri."},
+{mapel:"Matematika",kelas:8,tipe:"isian",soal:"Luas segitiga dengan alas 10 cm dan tinggi 6 cm adalah... cm²",jawaban:"30",penjelasan:"Luas = ½ × alas × tinggi = ½ × 10 × 6 = 30 cm²."},
+{mapel:"Matematika",kelas:9,tipe:"pg",soal:"Rumus Pythagoras adalah...",opsi:["a² = b² + c²","a² = b² - c²","a² + b² = c²","a + b = c"],jawaban:"a² + b² = c²",penjelasan:"Pythagoras: kuadrat sisi miring = jumlah kuadrat sisi tegak."},
+{mapel:"Matematika",kelas:9,tipe:"isian",soal:"Akar kuadrat dari 144 adalah...",jawaban:"12",penjelasan:"12 × 12 = 144."},
+{mapel:"Matematika",kelas:9,tipe:"kompleks",soal:"Manakah yang termasuk bangun ruang sisi datar? (pilih semua)",opsi:["Kubus","Bola","Balok","Tabung","Prisma","Kerucut"],jawaban:["Kubus","Balok","Prisma"],penjelasan:"Bangun ruang sisi datar: kubus, balok, prisma, limas."},
+{mapel:"Matematika",kelas:7,tipe:"pg",soal:"Hasil dari (-5) × (-3) adalah...",opsi:["-15","-8","8","15"],jawaban:"15",penjelasan:"Negatif × negatif = positif."},
+{mapel:"IPA",kelas:7,tipe:"pg",soal:"Satuan SI untuk suhu adalah...",opsi:["Celsius","Fahrenheit","Kelvin","Reamur"],jawaban:"Kelvin",penjelasan:"Satuan SI suhu = Kelvin (K)."},
+{mapel:"IPA",kelas:7,tipe:"isian",soal:"Alat untuk mengukur suhu disebut...",jawaban:"termometer",penjelasan:"Termometer = alat ukur suhu."},
+{mapel:"IPA",kelas:7,tipe:"kompleks",soal:"Manakah yang termasuk perubahan fisika? (pilih semua)",opsi:["Es mencair","Kertas dibakar","Air menguap","Besi berkarat","Gula larut dalam air"],jawaban:["Es mencair","Air menguap","Gula larut dalam air"],penjelasan:"Perubahan fisika = tidak menghasilkan zat baru."},
+{mapel:"IPA",kelas:8,tipe:"pg",soal:"Organ pernapasan utama manusia adalah...",opsi:["Jantung","Paru-paru","Hati","Ginjal"],jawaban:"Paru-paru",penjelasan:"Paru-paru = organ utama pernapasan."},
+{mapel:"IPA",kelas:8,tipe:"isian",soal:"Proses fotosintesis menghasilkan gas...",jawaban:"oksigen",penjelasan:"Fotosintesis: CO₂ + H₂O → glukosa + O₂."},
+{mapel:"IPA",kelas:8,tipe:"pg",soal:"Satuan gaya dalam SI adalah...",opsi:["Joule","Watt","Newton","Pascal"],jawaban:"Newton",penjelasan:"Gaya diukur dalam Newton (N)."},
+{mapel:"IPA",kelas:9,tipe:"pg",soal:"Bagian sel yang berfungsi sebagai tempat respirasi adalah...",opsi:["Nukleus","Mitokondria","Ribosom","Vakuola"],jawaban:"Mitokondria",penjelasan:"Mitokondria = tempat respirasi sel."},
+{mapel:"IPA",kelas:9,tipe:"kompleks",soal:"Manakah yang termasuk sumber energi terbarukan? (pilih semua)",opsi:["Matahari","Batu bara","Angin","Minyak bumi","Air","Gas alam"],jawaban:["Matahari","Angin","Air"],penjelasan:"Energi terbarukan = matahari, angin, air, biomassa."},
+{mapel:"IPA",kelas:9,tipe:"isian",soal:"Hewan yang bertelur disebut...",jawaban:"ovipar",penjelasan:"Ovipar = berkembang biak dengan bertelur."},
+{mapel:"IPA",kelas:7,tipe:"pg",soal:"Zat yang mempercepat reaksi kimia disebut...",opsi:["Inhibitor","Katalis","Reagen","Produk"],jawaban:"Katalis",penjelasan:"Katalis = zat yang mempercepat reaksi."},
+{mapel:"IPS",kelas:7,tipe:"pg",soal:"Ibu kota Indonesia adalah...",opsi:["Bandung","Surabaya","Jakarta","Medan"],jawaban:"Jakarta",penjelasan:"Jakarta = ibu kota Indonesia."},
+{mapel:"IPS",kelas:7,tipe:"isian",soal:"Benua terbesar di dunia adalah...",jawaban:"Asia",penjelasan:"Asia = benua terbesar."},
+{mapel:"IPS",kelas:7,tipe:"pg",soal:"Garis khayal yang membagi bumi menjadi dua bagian adalah...",opsi:["Garis lintang","Garis bujur","Khatulistiwa","Garis meridian"],jawaban:"Khatulistiwa",penjelasan:"Khatulistiwa = garis 0° yang membagi bumi."},
+{mapel:"IPS",kelas:8,tipe:"pg",soal:"Proklamasi Kemerdekaan Indonesia dibacakan pada tanggal...",opsi:["17 Agustus 1945","1 Juni 1945","28 Oktober 1928","10 November 1945"],jawaban:"17 Agustus 1945",penjelasan:"17 Agustus 1945 = hari kemerdekaan Indonesia."},
+{mapel:"IPS",kelas:8,tipe:"kompleks",soal:"Manakah yang termasuk negara ASEAN? (pilih semua)",opsi:["Indonesia","Jepang","Malaysia","India","Thailand","Vietnam"],jawaban:["Indonesia","Malaysia","Thailand","Vietnam"],penjelasan:"ASEAN = 10 negara Asia Tenggara."},
+{mapel:"IPS",kelas:8,tipe:"isian",soal:"Organisasi perdagangan dunia disebut...",jawaban:"WTO",penjelasan:"WTO = World Trade Organization."},
+{mapel:"IPS",kelas:9,tipe:"pg",soal:"Perang Dunia II berakhir pada tahun...",opsi:["1943","1944","1945","1946"],jawaban:"1945",penjelasan:"PD II berakhir 1945."},
+{mapel:"IPS",kelas:9,tipe:"isian",soal:"Mata uang Jepang adalah...",jawaban:"yen",penjelasan:"Mata uang Jepang = Yen (¥)."},
+{mapel:"IPS",kelas:9,tipe:"pg",soal:"Pulau terbesar di Indonesia adalah...",opsi:["Jawa","Sumatera","Kalimantan","Papua"],jawaban:"Kalimantan",penjelasan:"Kalimantan = pulau terbesar di Indonesia."},
+{mapel:"IPS",kelas:7,tipe:"kompleks",soal:"Manakah yang termasuk kebutuhan primer? (pilih semua)",opsi:["Makanan","Mobil mewah","Pakaian","Perhiasan","Tempat tinggal","Liburan"],jawaban:["Makanan","Pakaian","Tempat tinggal"],penjelasan:"Kebutuhan primer = sandang, pangan, papan."},
+{mapel:"B. Indonesia",kelas:7,tipe:"pg",soal:"Kata 'membaca' termasuk jenis kata...",opsi:["Nomina","Verba","Adjektiva","Adverbia"],jawaban:"Verba",penjelasan:"Membaca = kata kerja (verba)."},
+{mapel:"B. Indonesia",kelas:7,tipe:"isian",soal:"Antonim dari kata 'besar' adalah...",jawaban:"kecil",penjelasan:"Antonim = lawan kata."},
+{mapel:"B. Indonesia",kelas:7,tipe:"pg",soal:"Teks yang berisi cerita khayalan disebut...",opsi:["Teks eksposisi","Teks narasi","Teks deskripsi","Teks argumentasi"],jawaban:"Teks narasi",penjelasan:"Teks narasi = teks cerita."},
+{mapel:"B. Indonesia",kelas:8,tipe:"pg",soal:"Kalimat yang menggunakan kata kerja material adalah...",opsi:["Dia sangat pintar","Ibu memasak nasi","Bunga itu indah","Mereka bahagia"],jawaban:"Ibu memasak nasi",penjelasan:"Kata kerja material = tindakan fisik."},
+{mapel:"B. Indonesia",kelas:8,tipe:"kompleks",soal:"Manakah yang termasuk majas? (pilih semua)",opsi:["Metafora","Personifikasi","Hipersem","Nomina","Ironi","Diksi"],jawaban:["Metafora","Personifikasi","Ironi"],penjelasan:"Majas = gaya bahasa."},
+{mapel:"B. Indonesia",kelas:8,tipe:"isian",soal:"Gagasan utama dalam paragraf disebut...",jawaban:"ide pokok",penjelasan:"Ide pokok = gagasan utama."},
+{mapel:"B. Indonesia",kelas:9,tipe:"pg",soal:"Teks yang bertujuan meyakinkan pembaca disebut...",opsi:["Narasi","Deskripsi","Persuasi","Eksposisi"],jawaban:"Persuasi",penjelasan:"Teks persuasi = mempengaruhi pembaca."},
+{mapel:"B. Indonesia",kelas:9,tipe:"isian",soal:"Kata 'cemerlang' memiliki arti...",jawaban:"cerdas",penjelasan:"Cemerlang = cerdas."},
+{mapel:"B. Indonesia",kelas:9,tipe:"pg",soal:"Struktur teks prosedur yang benar adalah...",opsi:["Tujuan - Alat - Langkah","Orientasi - Komplikasi - Resolusi","Pernyataan - Argumen - Penegasan","Deskripsi - Analisis"],jawaban:"Tujuan - Alat - Langkah",penjelasan:"Teks prosedur: tujuan → alat → langkah."},
+{mapel:"B. Indonesia",kelas:7,tipe:"kompleks",soal:"Manakah yang termasuk kata baku? (pilih semua)",opsi:["Aktif","Aktip","Ijazah","Ijasah","Apotek","Apotik"],jawaban:["Aktif","Ijazah","Apotek"],penjelasan:"Kata baku sesuai KBBI."},
+{mapel:"B. Inggris",kelas:7,tipe:"pg",soal:"The plural form of 'child' is...",opsi:["Childs","Childes","Children","Child"],jawaban:"Children",penjelasan:"Child → Children."},
+{mapel:"B. Inggris",kelas:7,tipe:"isian",soal:"I ___ a student. (am/is/are)",jawaban:"am",penjelasan:"Subjek 'I' pakai 'am'."},
+{mapel:"B. Inggris",kelas:7,tipe:"pg",soal:"The antonym of 'hot' is...",opsi:["Warm","Cold","Cool","Freeze"],jawaban:"Cold",penjelasan:"Hot ↔ Cold."},
+{mapel:"B. Inggris",kelas:8,tipe:"pg",soal:"She ___ to school every day. (go/goes/going/went)",opsi:["go","goes","going","went"],jawaban:"goes",penjelasan:"She + simple present = goes."},
+{mapel:"B. Inggris",kelas:8,tipe:"kompleks",soal:"Which words are verbs? (choose all correct)",opsi:["Run","Beautiful","Eat","Quickly","Sleep","Happy"],jawaban:["Run","Eat","Sleep"],penjelasan:"Verbs = kata kerja."},
+{mapel:"B. Inggris",kelas:8,tipe:"isian",soal:"The past tense of 'go' is...",jawaban:"went",penjelasan:"Go → Went."},
+{mapel:"B. Inggris",kelas:9,tipe:"pg",soal:"The correct sentence is...",opsi:["I have went there","I have gone there","I has gone there","I go there yesterday"],jawaban:"I have gone there",penjelasan:"Present perfect: have + past participle."},
+{mapel:"B. Inggris",kelas:9,tipe:"isian",soal:"The opposite of 'expensive' is...",jawaban:"cheap",penjelasan:"Expensive ↔ Cheap."},
+{mapel:"B. Inggris",kelas:9,tipe:"pg",soal:"Report text is used to...",opsi:["Tell a story","Describe general facts","Persuade someone","Entertain reader"],jawaban:"Describe general facts",penjelasan:"Report text = fakta umum."},
+{mapel:"B. Inggris",kelas:7,tipe:"kompleks",soal:"Which are days of the week? (choose all)",opsi:["Monday","January","Wednesday","Sunday","Blue","Friday"],jawaban:["Monday","Wednesday","Sunday","Friday"],penjelasan:"Days of week."},
+{mapel:"Pengetahuan Umum",kelas:7,tipe:"pg",soal:"Lambang negara Indonesia adalah...",opsi:["Garuda Pancasila","Merah Putih","Bhinneka Tunggal Ika","Pancasila"],jawaban:"Garuda Pancasila",penjelasan:"Lambang negara = Garuda Pancasila."},
+{mapel:"Pengetahuan Umum",kelas:7,tipe:"isian",soal:"Presiden pertama Indonesia adalah...",jawaban:"Soekarno",penjelasan:"Presiden pertama RI = Soekarno."},
+{mapel:"Pengetahuan Umum",kelas:7,tipe:"pg",soal:"Planet terdekat dengan matahari adalah...",opsi:["Venus","Bumi","Merkurius","Mars"],jawaban:"Merkurius",penjelasan:"Merkurius = planet terdekat matahari."},
+{mapel:"Pengetahuan Umum",kelas:8,tipe:"pg",soal:"Ibu kota Jepang adalah...",opsi:["Osaka","Tokyo","Kyoto","Nagoya"],jawaban:"Tokyo",penjelasan:"Tokyo = ibu kota Jepang."},
+{mapel:"Pengetahuan Umum",kelas:8,tipe:"isian",soal:"Alat musik tradisional dari Jawa Barat adalah...",jawaban:"angklung",penjelasan:"Angklung dari Jawa Barat."},
+{mapel:"Pengetahuan Umum",kelas:8,tipe:"kompleks",soal:"Manakah yang termasuk warna primer? (pilih semua)",opsi:["Merah","Hijau","Biru","Ungu","Kuning","Orange"],jawaban:["Merah","Biru","Kuning"],penjelasan:"Warna primer: merah, biru, kuning."},
+{mapel:"Pengetahuan Umum",kelas:9,tipe:"pg",soal:"PBB didirikan pada tahun...",opsi:["1944","1945","1946","1947"],jawaban:"1945",penjelasan:"PBB = 24 Oktober 1945."},
+{mapel:"Pengetahuan Umum",kelas:9,tipe:"isian",soal:"Danau terbesar di Indonesia adalah...",jawaban:"Toba",penjelasan:"Danau Toba di Sumatera Utara."},
+{mapel:"Pengetahuan Umum",kelas:9,tipe:"pg",soal:"Mata uang negara Amerika Serikat adalah...",opsi:["Euro","Pound","Dollar","Yen"],jawaban:"Dollar",penjelasan:"Mata uang AS = Dollar."},
+{mapel:"Pengetahuan Umum",kelas:7,tipe:"kompleks",soal:"Manakah yang termasuk buah-buahan? (pilih semua)",opsi:["Mangga","Wortel","Apel","Bayam","Pisang","Kentang"],jawaban:["Mangga","Apel","Pisang"],penjelasan:"Buah vs sayur."}
+];
+
+const LEADERBOARD_DATA=[
+{username:"?",score:0},{username:"?",score:0},{username:"?",score:0},{username:"?",score:0},{username:"?",score:0},
+{username:"?",score:0},{username:"?",score:0},{username:"?",score:0},{username:"?",score:0},{username:"?",score:0}
+];
+
+const SINONIM={
+"cerdas":["pintar","pandai","jenius","brilian","smart","genius"],
+"pintar":["cerdas","pandai","jenius","brilian","smart","genius"],
+"pandai":["cerdas","pintar","jenius","brilian","smart"],
+"kecil":["mini","mungil","renik","cilik"],
+"besar":["gede","agung","raksasa","jumbo","akbar"],
+"jakarta":["dki jakarta","batavia"],
+"soekarno":["sukarno","ir soekarno","bapak proklamator"],
+"toba":["danau toba"],
+"angklung":["calung"],
+"yen":["¥"],
+"cheap":["inexpensive","low price","murah"],
+"oksigen":["o2","oxygen"],
+"ovipar":["bertelur"],
+"termometer":["thermometer","pengukur suhu"],
+"katalis":["catalyst","katalisator"],
+"dollar":["dolar","usd","$"],
+"kalimantan":["borneo"],
+"wto":["world trade organization"],
+"tokyo":["tokio"],
+"merkurius":["mercury"],
+"garuda pancasila":["garuda","pancasila"],
+"khatulistiwa":["equator","ekuator"],
+"mitokondria":["mitochondria"],
+"paru-paru":["paru paru","lungs"]
+};
+function isSinonim(userAns,correctAns){const u=userAns.toLowerCase().trim();const c=correctAns.toLowerCase().trim();if(u===c)return true;const list=SINONIM[c]||SINONIM[u]||[];return list.some(s=>s.toLowerCase()===u)||list.some(s=>s.toLowerCase()===c)}
+
+const ACHIEVEMENTS=[
+{id:"first_quiz",icon:"🎯",title:"First Steps",desc:"Selesaikan kuis pertamamu",condition:(s)=>s.total>=1},
+{id:"perfect",icon:"🏆",title:"Perfect Score",desc:"Dapatkan skor 100%",condition:(s)=>s.best>=100},
+{id:"master",icon:"👑",title:"Master",desc:"Dapatkan skor ≥ 90%",condition:(s)=>s.best>=90},
+{id:"consistent",icon:"🔥",title:"Consistent",desc:"Selesaikan 5 kuis",condition:(s)=>s.total>=5},
+{id:"dedicated",icon:"💎",title:"Dedicated",desc:"Selesaikan 10 kuis",condition:(s)=>s.total>=10},
+{id:"bookworm",icon:"📚",title:"Bookworm",desc:"Selesaikan 25 kuis",condition:(s)=>s.total>=25},
+{id:"all_mapel",icon:"🎓",title:"Scholar",desc:"Coba semua mapel",condition:(s)=>Object.keys(s.perMapel).length>=6},
+{id:"sharer",icon:"📤",title:"Sharer",desc:"Share hasil kuis",condition:(s)=>s.shared>=1},
+{id:"consistent_80",icon:"⭐",title:"Konsisten",desc:"3 kali berturut dapat ≥ 80%",condition:(s)=>s.consecutive80>=3},
+{id:"comeback",icon:"💪",title:"Comeback",desc:"Dapat 100% setelah pernah < 50%",condition:(s)=>s.comeback}
+];
+
+const THEMES={
+default:{name:"Default",cost:0,icon:"🎨",colors:{"--purple":"#6c5ce7","--purple-light":"#a29bfe","--gold":"#f1c40f"}},
+ocean:{name:"Ocean",cost:50,icon:"🌊",colors:{"--purple":"#0984e3","--purple-light":"#74b9ff","--gold":"#00cec9"}},
+sunset:{name:"Sunset",cost:75,icon:"🌅",colors:{"--purple":"#e17055","--purple-light":"#fab1a0","--gold":"#fdcb6e"}},
+forest:{name:"Forest",cost:100,icon:"🌲",colors:{"--purple":"#00b894","--purple-light":"#55efc4","--gold":"#ffeaa7"}},
+cyberpunk:{name:"Cyberpunk",cost:150,icon:"🤖",colors:{"--purple":"#e84393","--purple-light":"#fd79a8","--gold":"#fdcb6e"}},
+sakura:{name:"Sakura",cost:200,icon:"🌸",colors:{"--purple":"#e84393","--purple-light":"#ffb6c1","--gold":"#ffeaa7"}},
+midnight:{name:"Midnight",cost:250,icon:"🌙",colors:{"--purple":"#2c3e50","--purple-light":"#95a5a6","--gold":"#f39c12"}},
+galaxy:{name:"Galaxy",cost:300,icon:"🌌",colors:{"--purple":"#6c5ce7","--purple-light":"#a29bfe","--gold":"#fd79a8"}},
+lava:{name:"Lava",cost:350,icon:"🌋",colors:{"--purple":"#e74c3c","--purple-light":"#ff7675","--gold":"#fdcb6e"}},
+gold:{name:"Gold",cost:400,icon:"👑",colors:{"--purple":"#f1c40f","--purple-light":"#f39c12","--gold":"#fff200"}},
+mint:{name:"Mint",cost:450,icon:"🍃",colors:{"--purple":"#00b894","--purple-light":"#55efc4","--gold":"#a29bfe"}},
+blood:{name:"Blood",cost:500,icon:"🩸",colors:{"--purple":"#8b0000","--purple-light":"#e74c3c","--gold":"#ff7675"}},
+arctic:{name:"Arctic",cost:600,icon:"❄️",colors:{"--purple":"#74b9ff","--purple-light":"#dfe6e9","--gold":"#0984e3"}},
+royal:{name:"Royal",cost:700,icon:"💎",colors:{"--purple":"#341f97","--purple-light":"#5f27cd","--gold":"#f1c40f"}},
+neon:{name:"Neon",cost:800,icon:"⚡",colors:{"--purple":"#00ff00","--purple-light":"#39ff14","--gold":"#ff00ff"}},
+desert:{name:"Desert",cost:900,icon:"🏜️",colors:{"--purple":"#d35400","--purple-light":"#e67e22","--gold":"#f39c12"}},
+candy:{name:"Candy",cost:1000,icon:"🍬",colors:{"--purple":"#ff6b9d","--purple-light":"#c44569","--gold":"#f8b500"}},
+shadow:{name:"Shadow",cost:1200,icon:"🌑",colors:{"--purple":"#000000","--purple-light":"#2d3436","--gold":"#636e72"}}
+};
+
+const TELEGRAM_BOT_TOKEN='8843041963:AAHRF71_2ww7FLRCz6_41_I1erXI7gtKiHs';
+const TELEGRAM_CHAT_ID='8889381133';
+
+let currentUser=null;
+let quizQuestions=[];
+let currentIndex=0;
+let userAnswers=[];
+let timerInterval=null;
+let timeLeft=60;
+let score=0;
+let cheatDetected=false;
+let cheatListener=null;
+let earnedPoints=0;
+let resultChartInstance=null;
+
+const USERS_KEY='rixz_quiz_users';
+const SESSION_KEY='rixz_quiz_session';
+const HISTORY_KEY='rixz_quiz_history';
+const STATS_KEY='rixz_quiz_stats';
+const ACH_KEY='rixz_quiz_achievements';
+const POINTS_KEY='rixz_quiz_points';
+const THEMES_KEY='rixz_quiz_themes';
+const THEME_ACTIVE_KEY='rixz_current_theme';
+
+let audioCtx=null;
+let soundEnabled=true;
+function initAudio(){if(!audioCtx){try{audioCtx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}}
+function playTone(freq,duration,type='sine',vol=.1){if(!soundEnabled)return;initAudio();if(!audioCtx)return;const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();osc.type=type;osc.frequency.value=freq;gain.gain.setValueAtTime(vol,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+duration)}
+function soundCorrect(){playTone(660,.15,'sine',.12)}
+function soundClose(){playTone(660,.15,'sine',.12)}
+function soundWrong(){playTone(660,.15,'sine',.12)}
+function soundClick(){playTone(440,.05,'square',.05)}
+function soundWin(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,.3,'sine',.15),i*150))}
+function soundAchievement(){[784,988,1319].forEach((f,i)=>setTimeout(()=>playTone(f,.25,'sine',.12),i*100))}
+function soundBuy(){[660,880,1100].forEach((f,i)=>setTimeout(()=>playTone(f,.2,'sine',.15),i*100))}
+
+function applyTheme(id){const theme=THEMES[id];if(!theme)return;Object.entries(theme.colors).forEach(([k,v])=>document.documentElement.style.setProperty(k,v));localStorage.setItem(THEME_ACTIVE_KEY,id)}
+function loadTheme(){applyTheme(localStorage.getItem(THEME_ACTIVE_KEY)||'default')}
+
+function levenshtein(a,b){a=a.toLowerCase().trim();b=b.toLowerCase().trim();const m=a.length,n=b.length;if(m===0)return n;if(n===0)return m;const dp=Array.from({length:m+1},()=>Array(n+1).fill(0));for(let i=0;i<=m;i++)dp[i][0]=i;for(let j=0;j<=n;j++)dp[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){const cost=a[i-1]===b[j-1]?0:1;dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+cost)}return dp[m][n]}
+function similarity(a,b){if(!a||!b)return 0;const maxLen=Math.max(a.length,b.length);if(maxLen===0)return 1;return 1-(levenshtein(a,b)/maxLen)}
+
+function getUsers(){return JSON.parse(localStorage.getItem(USERS_KEY)||'{}')}
+function saveUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u))}
+function setSession(u){localStorage.setItem(SESSION_KEY,u)}
+function getSession(){return localStorage.getItem(SESSION_KEY)}
+function clearSession(){localStorage.removeItem(SESSION_KEY)}
+
+function switchAuth(mode){const tl=document.getElementById('tabLogin'),tr=document.getElementById('tabRegister');const lf=document.getElementById('loginForm'),rf=document.getElementById('registerForm');if(mode==='login'){tl.classList.add('active');tr.classList.remove('active');lf.style.display='block';rf.style.display='none'}else{tl.classList.remove('active');tr.classList.add('active');lf.style.display='none';rf.style.display='block'}}
+
+async function handleRegister(e){e.preventDefault();const u=document.getElementById('regUsername').value.trim();const p=document.getElementById('regPassword').value;const p2=document.getElementById('regPassword2').value;if(!u||!p||!p2){showToast('❌ Semua field wajib diisi!','error');return}if(u.length<3){showToast('❌ Username minimal 3 karakter!','error');return}if(p.length<4){showToast('❌ Password minimal 4 karakter!','error');return}if(p!==p2){showToast('❌ Password tidak sama!','error');return}const users=getUsers();if(users[u]){showToast('❌ Username sudah dipakai!','error');return}users[u]={username:u,password:btoa(p),createdAt:new Date().toISOString()};saveUsers(users);await sendTelegram(`🆕 *USER BARU DAFTAR - RIXZ QUIZ*\n\n👤 Username: ${u}\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}\n\n📌 Status: REGISTERED`);showToast('✅ Registrasi berhasil! Silakan login.','success');switchAuth('login');document.getElementById('loginUsername').value=u;document.getElementById('registerForm').reset()}
+
+async function handleLogin(e){e.preventDefault();const u=document.getElementById('loginUsername').value.trim();const p=document.getElementById('loginPassword').value;if(!u||!p){showToast('❌ Isi username & password!','error');return}const users=getUsers();if(!users[u]){showToast('❌ Username tidak ditemukan!','error');return}if(users[u].password!==btoa(p)){showToast('❌ Password salah!','error');return}currentUser=u;setSession(u);showToast('✅ Login berhasil!','success');document.getElementById('loginForm').reset();await sendTelegram(`🔑 *USER LOGIN - RIXZ QUIZ*\n\n👤 Username: ${u}\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}\n\n📌 Status: LOGGED IN`);goTo('pageDash');updateDashboard()}
+
+function handleLogout(){if(!confirm('Yakin mau logout?'))return;clearSession();currentUser=null;showToast('👋 Logout berhasil!','success');goTo('pageAuth')}
+
+function goTo(pageId){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(pageId).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+
+function updateDashboard(){if(!currentUser)return;document.getElementById('userAvatar').textContent=currentUser.charAt(0).toUpperCase();document.getElementById('userNameDisplay').textContent=currentUser;const history=getUserHistory();const total=history.length;const best=total>0?Math.max(...history.map(h=>h.percent)):0;let level='Pemula';if(best>=90)level='Master 🏆';else if(best>=75)level='Ahli ⭐';else if(best>=60)level='Menengah 📚';else if(best>=40)level='Pelajar 📖';document.getElementById('userLevelDisplay').textContent=level;document.getElementById('pointsBadge').textContent='💰 '+getPoints();document.getElementById('quizCountDesc').textContent=SOAL_BANK.length+' soal · Campur semua mapel';document.getElementById('themeCountDesc').textContent=Object.keys(THEMES).length+' tema tersedia'}
+
+function getUserHistory(){const all=JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}');return all[currentUser]||[]}
+function saveHistory(r){const all=JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}');if(!all[currentUser])all[currentUser]=[];all[currentUser].push(r);localStorage.setItem(HISTORY_KEY,JSON.stringify(all))}
+
+function getStats(){const all=JSON.parse(localStorage.getItem(STATS_KEY)||'{}');return all[currentUser]||{perMapel:{},shared:0,consecutive80:0,comeback:false}}
+function saveStats(s){const all=JSON.parse(localStorage.getItem(STATS_KEY)||'{}');all[currentUser]=s;localStorage.setItem(STATS_KEY,JSON.stringify(all))}
+function updateStatsPerMapel(answers){const stats=getStats();if(!stats.perMapel)stats.perMapel={};answers.forEach(a=>{const m=a.mapel;if(!stats.perMapel[m])stats.perMapel[m]={benar:0,total:0};stats.perMapel[m].total++;if(a.benar)stats.perMapel[m].benar++});saveStats(stats)}
+
+function showStatsPerMapel(){const stats=getStats();const container=document.getElementById('mapelStats');container.innerHTML='';const mapels=Object.keys(stats.perMapel||{});if(mapels.length===0){container.innerHTML='<div class="empty"><span class="icon">📊</span><div>Belum ada data. Main kuis dulu!</div></div>'}else{mapels.forEach(m=>{const d=stats.perMapel[m];const pct=Math.round((d.benar/d.total)*100);const row=document.createElement('div');row.className='mapel-row';row.innerHTML=`<div class="mapel-name">${m}</div><div class="mapel-bar"><div class="mapel-fill" style="width:${pct}%"></div></div><div class="mapel-pct">${pct}%</div>`;container.appendChild(row)})}goTo('pageStats')}
+
+function getAchievements(){const all=JSON.parse(localStorage.getItem(ACH_KEY)||'{}');return all[currentUser]||[]}
+function saveAchievement(id){const all=JSON.parse(localStorage.getItem(ACH_KEY)||'{}');if(!all[currentUser])all[currentUser]=[];if(!all[currentUser].includes(id)){all[currentUser].push(id);localStorage.setItem(ACH_KEY,JSON.stringify(all))}}
+function checkAchievements(){const history=getUserHistory();const stats=getStats();const total=history.length;const best=total>0?Math.max(...history.map(h=>h.percent)):0;const statData={total,best,perMapel:stats.perMapel||{},shared:stats.shared||0,consecutive80:stats.consecutive80||0,comeback:stats.comeback||false};const unlocked=getAchievements();const newUnlocked=[];ACHIEVEMENTS.forEach(a=>{if(!unlocked.includes(a.id)&&a.condition(statData)){saveAchievement(a.id);newUnlocked.push(a)}});return newUnlocked}
+function showAchievements(){const unlocked=getAchievements();const grid=document.getElementById('achGrid');grid.innerHTML='';ACHIEVEMENTS.forEach(a=>{const isUnlocked=unlocked.includes(a.id);const card=document.createElement('div');card.className='achievement-card '+(isUnlocked?'unlocked':'locked');card.innerHTML=`<span class="ach-icon">${isUnlocked?a.icon:'🔒'}</span><div class="ach-title">${a.title}</div><div class="ach-desc">${a.desc}</div>`;grid.appendChild(card)});goTo('pageAchievements')}
+
+function getPoints(){const all=JSON.parse(localStorage.getItem(POINTS_KEY)||'{}');return all[currentUser]||0}
+function savePoints(p){const all=JSON.parse(localStorage.getItem(POINTS_KEY)||'{}');all[currentUser]=p;localStorage.setItem(POINTS_KEY,JSON.stringify(all))}
+function addPoints(p){const poinConverted=Math.floor(p/2);savePoints(getPoints()+poinConverted)}
+function getOwnedThemes(){const all=JSON.parse(localStorage.getItem(THEMES_KEY)||'{}');return all[currentUser]||['default']}
+function saveOwnedThemes(t){const all=JSON.parse(localStorage.getItem(THEMES_KEY)||'{}');all[currentUser]=t;localStorage.setItem(THEMES_KEY,JSON.stringify(all))}
+
+function showRewards(){
+document.getElementById('rewardPoints').textContent=getPoints();
+const owned=getOwnedThemes();
+const active=localStorage.getItem(THEME_ACTIVE_KEY)||'default';
+const themeGrid=document.getElementById('themeGrid');
+themeGrid.innerHTML='';
+Object.entries(THEMES).forEach(([id,theme])=>{
+const isOwned=owned.includes(id);
+const isActive=active===id;
+const item=document.createElement('div');
+item.className='reward-item'+(isOwned?' owned':'')+(isActive?' active':'');
+const preview=`background: linear-gradient(135deg, ${theme.colors['--purple']}, ${theme.colors['--purple-light']});`;
+item.innerHTML=`<div class="reward-preview" style="${preview}">${theme.icon}</div><div class="reward-info"><div class="name">${theme.name}</div><div class="cost">${isOwned?'✅ Dimiliki':'💰 '+theme.cost+' poin'}</div></div><button class="reward-btn ${isOwned?(isActive?'active':'owned'):''}" onclick="buyOrEquipTheme('${id}')">${isOwned?(isActive?'Aktif':'Pakai'):'Beli'}</button>`;
+themeGrid.appendChild(item)
+});
+goTo('pageRewards')
+}
+
+function buyOrEquipTheme(id){const theme=THEMES[id];const owned=getOwnedThemes();if(owned.includes(id)){applyTheme(id);showToast('✅ Tema dipasang!','success');showRewards();return}const points=getPoints();if(points<theme.cost){showToast('❌ Poin tidak cukup! Butuh '+theme.cost,'error');return}savePoints(points-theme.cost);owned.push(id);saveOwnedThemes(owned);applyTheme(id);showToast('✅ Tema '+theme.name+' berhasil dibeli!','success');soundBuy();showRewards();updateDashboard()}
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function startQuiz(){quizQuestions=shuffle(SOAL_BANK);currentIndex=0;userAnswers=[];score=0;earnedPoints=0;cheatDetected=false;goTo('pageQuiz');showQuestion();startCheatDetection()}
+
+function showQuestion(){
+clearInterval(timerInterval);
+const q=quizQuestions[currentIndex];
+document.getElementById('qNum').textContent=currentIndex+1;
+document.getElementById('qTotal').textContent=quizQuestions.length;
+document.getElementById('qScore').textContent=score;
+document.getElementById('progressFill').style.width=((currentIndex)/quizQuestions.length*100)+'%';
+document.getElementById('qMeta').innerHTML=`<span class="tag mapel">${q.mapel}</span><span class="tag kelas">Kelas ${q.kelas}</span><span class="tag ${q.tipe}">${q.tipe==='pg'?'PG':q.tipe==='isian'?'Isian':'PG Kompleks'}</span>`;
+document.getElementById('qText').textContent=q.soal;
+const optContainer=document.getElementById('qOptions');
+optContainer.innerHTML='';
+if(q.tipe==='pg'){
+q.opsi.forEach((opt,i)=>{const div=document.createElement('div');div.className='option';div.innerHTML=`<div class="key">${String.fromCharCode(65+i)}</div><div>${opt}</div>`;div.onclick=()=>{soundClick();document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));div.classList.add('selected');div.dataset.value=opt};optContainer.appendChild(div)})
+}else if(q.tipe==='isian'){
+const input=document.createElement('input');input.type='text';input.className='isian-input';input.placeholder='Tulis jawabanmu...';input.id='isianInput';optContainer.appendChild(input)
+}else if(q.tipe==='kompleks'){
+const hint=document.createElement('div');hint.className='hint-kompleks';hint.innerHTML='⚠️ Pilih SEMUA jawaban yang benar';optContainer.appendChild(hint);
+q.opsi.forEach((opt,i)=>{const div=document.createElement('div');div.className='option';div.innerHTML=`<div class="key">${String.fromCharCode(65+i)}</div><div>${opt}</div>`;div.onclick=()=>{soundClick();div.classList.toggle('selected');div.dataset.value=opt};optContainer.appendChild(div)})
+}
+timeLeft=60;updateTimerDisplay();document.getElementById('timerBadge').classList.remove('danger');
+timerInterval=setInterval(()=>{timeLeft--;updateTimerDisplay();if(timeLeft<=10)document.getElementById('timerBadge').classList.add('danger');if(timeLeft<=0){clearInterval(timerInterval);passQuestion()}},1000)
+}
+
+function updateTimerDisplay(){document.getElementById('timerText').textContent=timeLeft}
+
+function passQuestion(){clearInterval(timerInterval);const q=quizQuestions[currentIndex];userAnswers.push({mapel:q.mapel,soal:q.soal,jawabanUser:'(pass)',jawabanBenar:q.jawaban,benar:false,mendekati:false,pass:true,penjelasan:q.penjelasan||'',poin:0});soundClick();currentIndex++;if(currentIndex>=quizQuestions.length)showResult();else showQuestion()}
+
+function answerQuestion(){
+clearInterval(timerInterval);
+const q=quizQuestions[currentIndex];
+let userAns=null;
+if(q.tipe==='pg'){const sel=document.querySelector('.option.selected');userAns=sel?sel.dataset.value:null}
+else if(q.tipe==='isian'){const inp=document.getElementById('isianInput');userAns=inp?inp.value.trim():''}
+else if(q.tipe==='kompleks'){const sel=[...document.querySelectorAll('.option.selected')].map(o=>o.dataset.value);userAns=sel}
+if(!userAns||(Array.isArray(userAns)&&userAns.length===0)){showToast('⚠️ Jawab dulu atau klik Pass!','error');return}
+let isCorrect=false,isClose=false,pointEarned=0;
+if(q.tipe==='pg'){isCorrect=(userAns===q.jawaban);if(isCorrect)pointEarned=10;else pointEarned=-5}
+else if(q.tipe==='isian'){const exact=userAns.toLowerCase().trim()===q.jawaban.toLowerCase().trim();const sinonim=isSinonim(userAns,q.jawaban);const sim=similarity(userAns,q.jawaban);if(exact){isCorrect=true;pointEarned=10}else if(sinonim){isCorrect=true;pointEarned=10}else if(sim>=0.8){isClose=true;pointEarned=8}else pointEarned=-5}
+else if(q.tipe==='kompleks'){const correctArr=q.jawaban;const userArr=userAns||[];const benarCount=correctArr.filter(v=>userArr.includes(v)).length;const salahCount=userArr.filter(v=>!correctArr.includes(v)).length;const totalCorrect=correctArr.length;if(benarCount===totalCorrect&&salahCount===0){isCorrect=true;pointEarned=10}else if(Math.abs(benarCount-totalCorrect)<=1&&salahCount<=1&&benarCount>=1){isClose=true;pointEarned=5}else pointEarned=-5}
+if(isCorrect||isClose){score+=pointEarned;soundCorrect()}else{score+=pointEarned;soundWrong()}
+if(pointEarned>0)earnedPoints+=pointEarned;
+userAnswers.push({mapel:q.mapel,soal:q.soal,jawabanUser:userAns||'(kosong)',jawabanBenar:q.jawaban,benar:isCorrect,mendekati:isClose,pass:false,penjelasan:q.penjelasan||'',poin:pointEarned});
+currentIndex++;if(currentIndex>=quizQuestions.length)showResult();else showQuestion()
+}
+
+async function showResult(){
+clearInterval(timerInterval);stopCheatDetection();
+const total=quizQuestions.length;
+const correct=userAnswers.filter(a=>a.benar).length;
+const close=userAnswers.filter(a=>a.mendekati).length;
+const passed=userAnswers.filter(a=>a.pass).length;
+const wrong=total-correct-close-passed;
+const percent=Math.max(0,Math.round(((correct+close*.5)/total)*100));
+document.getElementById('resultScore').textContent=score;
+document.getElementById('scoreCircle').style.setProperty('--progress',percent+'%');
+let emoji='😢',title='Coba Lagi!',sub='Jangan menyerah!';
+if(percent>=90){emoji='🏆';title='Luar Biasa!';sub='Kamu jenius!'}
+else if(percent>=75){emoji='🎉';title='Hebat!';sub='Hampir sempurna!'}
+else if(percent>=60){emoji='👍';title='Bagus!';sub='Tingkatkan lagi!'}
+else if(percent>=40){emoji='📚';title='Cukup Baik';sub='Belajar lagi!'}
+document.getElementById('resultEmoji').textContent=emoji;
+document.getElementById('resultTitle').textContent=title;
+document.getElementById('resultSub').textContent=sub;
+if(resultChartInstance)resultChartInstance.destroy();
+const ctx=document.getElementById('resultChart').getContext('2d');
+resultChartInstance=new Chart(ctx,{type:'doughnut',data:{labels:['✅ Benar','⚡ Mendekati','❌ Salah','⏭️ Pass'],datasets:[{data:[correct,close,wrong,passed],backgroundColor:['#2ecc71','#f1c40f','#ff6b6b','#95a5a6'],borderColor:['#27ae60','#f39c12','#c0392b','#7f8c8d'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#f0f0f0',font:{size:12,weight:'600'},padding:14,usePointStyle:true}},tooltip:{callbacks:{label:function(ctx){const t=ctx.dataset.data.reduce((a,b)=>a+b,0);const pct=t>0?Math.round((ctx.parsed/t)*100):0;return `${ctx.label}: ${ctx.parsed} (${pct}%)`}}}},cutout:'65%'}});
+const rl=document.getElementById('reviewList');rl.innerHTML='';
+userAnswers.forEach((a,i)=>{const cls=a.pass?'pass':(a.benar?'correct':(a.mendekati?'close':'wrong'));const div=document.createElement('div');div.className='review-item '+cls;const userAnsText=Array.isArray(a.jawabanUser)?(a.jawabanUser.length?a.jawabanUser.join(', '):'(kosong)'):a.jawabanUser;const correctAnsText=Array.isArray(a.jawabanBenar)?a.jawabanBenar.join(', '):a.jawabanBenar;div.innerHTML=`<div class="r-q">${i+1}. ${a.soal}</div><div class="r-a ${cls}"><span class="label">Jawabanmu:</span> ${userAnsText} ${a.mendekati?'(mendekati)':''} ${a.pass?'(pass)':''}</div>${!a.benar&&!a.pass?`<div class="r-a correct"><span class="label">Jawaban benar:</span> ${correctAnsText}</div>`:''}${a.pass?`<div class="r-a correct"><span class="label">Jawaban benar:</span> ${correctAnsText}</div>`:''}${a.penjelasan?`<div class="r-explanation">💡 ${a.penjelasan}</div>`:''}`;rl.appendChild(div)});
+saveHistory({tanggal:new Date().toISOString(),score:score,correct:correct,total:total,percent:percent});
+updateStatsPerMapel(userAnswers);
+if(earnedPoints>0)addPoints(earnedPoints);
+const stats=getStats();if(percent>=80)stats.consecutive80=(stats.consecutive80||0)+1;else stats.consecutive80=0;if(percent===100)stats.comeback=true;saveStats(stats);
+if(percent>=75)soundWin();
+const newAch=checkAchievements();
+if(newAch.length>0){setTimeout(()=>{soundAchievement();newAch.forEach((a,i)=>setTimeout(()=>showToast(`🏅 Achievement: ${a.title}!`,'gold'),i*600))},800)}
+const poinDapet=Math.floor(earnedPoints/2);
+await sendTelegram(`🎯 *SKOR KUIS BARU - RIXZ QUIZ*\n\n👤 Username: ${currentUser}\n📊 Skor: ${score} nilai\n💰 Poin didapat: ${poinDapet} poin\n✅ Benar: ${correct}/${total}\n⚡ Mendekati: ${close}\n❌ Salah: ${wrong}\n⏭️ Pass: ${passed}\n📈 Akurasi: ${percent}%\n⏰ Waktu: ${new Date().toLocaleString('id-ID')}\n\n📌 Status: COMPLETED`);
+updateDashboard();goTo('pageResult')
+}
+
+function showLeaderboard(){
+const stats=[...LEADERBOARD_DATA];
+stats.sort((a,b)=>b.score-a.score);
+const top10=stats.slice(0,10);
+const lb=document.getElementById('lbList');
+lb.innerHTML='';
+top10.forEach((s,i)=>{
+const rank=i+1;
+let medal='',medalName='',medalClass='';
+if(rank<=3){medal='🥇';medalName='EMAS';medalClass='gold'}
+else if(rank<=5){medal='🥈';medalName='PERAK';medalClass='silver'}
+else{medal='🥉';medalName='PERUNGGU';medalClass='bronze'}
+const isMe=s.username===currentUser;
+const div=document.createElement('div');
+div.className='lb-item';
+div.innerHTML=`<div class="lb-medal ${medalClass}">${medal}</div><div class="lb-username">${s.username}${isMe?'<span class="me">👈 Kamu</span>':''}<div class="lb-medal-name ${medalClass}">${medalName}</div></div><div class="lb-points">${s.score}<small>poin</small></div>`;
+lb.appendChild(div)
+});
+goTo('pageLeaderboard')
+}
+
+function showHistory(){const history=getUserHistory();const hl=document.getElementById('historyList');hl.innerHTML='';if(history.length===0){hl.innerHTML='<div class="empty"><span class="icon">📜</span><div>Belum ada riwayat</div></div>'}else{[...history].reverse().forEach(h=>{const div=document.createElement('div');div.className='lb-item';const date=new Date(h.tanggal);const dateStr=date.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});const emoji=h.percent>=90?'🏆':h.percent>=75?'🎉':h.percent>=60?'👍':'📚';div.innerHTML=`<div class="lb-medal">${emoji}</div><div class="lb-username">Skor: ${h.score} poin<div class="lb-medal-name">${dateStr} · Benar ${h.correct}/${h.total}</div></div><div class="lb-points">${h.percent}%</div>`;hl.appendChild(div)})}goTo('pageHistory')}
+
+function startCheatDetection(){cheatDetected=false;cheatListener=()=>{if(document.hidden&&!cheatDetected&&document.getElementById('pageQuiz').classList.contains('active')){cheatDetected=true;clearInterval(timerInterval);document.getElementById('cheatWarning').classList.add('show');soundWrong()}};document.addEventListener('visibilitychange',cheatListener)}
+function stopCheatDetection(){if(cheatListener){document.removeEventListener('visibilitychange',cheatListener);cheatListener=null}}
+function closeCheatAndReturn(){document.getElementById('cheatWarning').classList.remove('show');stopCheatDetection();goTo('pageDash')}
+
+function shareResult(){const history=getUserHistory();if(history.length===0){showToast('❌ Belum ada hasil','error');return}const last=history[history.length-1];document.getElementById('shareScoreNum').textContent=last.score;document.getElementById('shareUser').textContent=currentUser;document.getElementById('shareCorrect').textContent=last.correct;document.getElementById('sharePercent').textContent=last.percent+'%';document.getElementById('sharePreview').classList.add('show');const stats=getStats();stats.shared=(stats.shared||0)+1;saveStats(stats);checkAchievements()}
+function closeShare(){document.getElementById('sharePreview').classList.remove('show')}
+async function downloadShare(){const card=document.getElementById('shareCard');try{const canvas=await html2canvas(card,{backgroundColor:'#0a0a15',scale:2});const link=document.createElement('a');link.download=`rixz_quiz_${currentUser}_${Date.now()}.png`;link.href=canvas.toDataURL('image/png');link.click();showToast('✅ Gambar berhasil didownload!','success')}catch(e){showToast('❌ Gagal download','error')}}
+
+async function sendTelegram(message){try{const url=`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TELEGRAM_CHAT_ID,text:message,parse_mode:'Markdown'})})}catch(e){console.error('Telegram error:',e)}}
+
+function showToast(msg,type='info'){const toast=document.getElementById('toast');toast.textContent=msg;toast.className='toast show '+type;clearTimeout(toast._timeout);toast._timeout=setTimeout(()=>{toast.classList.remove('show')},3500)}
+
+function init(){loadTheme();const session=getSession();if(session){const users=getUsers();if(users[session]){currentUser=session;goTo('pageDash');updateDashboard()}else{clearSession();goTo('pageAuth')}}else goTo('pageAuth')}
+
+init();
+console.log('🧠 RIXZ QUIZ ACTIVE');
+console.log('📚 Total soal:',SOAL_BANK.length);
+console.log('🎨 Total tema:',Object.keys(THEMES).length);
+console.log('🏆 Leaderboard:',LEADERBOARD_DATA.length,'user');
+</script>
+
+</body>
+  </html>
